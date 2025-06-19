@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helpdesk - Richieste Audio</title>
+    <link rel="stylesheet" href="../static/css/richieste.css">
+</head>
+<body>
+    <h1>Helpdesk - Richieste Audio</h1>
+    
+    {% if audio_files %}
+    <ul class="audio-list">
+        {% for audio in audio_files %}
+        <li class="audio-item">
+            <div class="audio-title">{{ audio['original_filename'] }}</div>
+            <div class="audio-date">Caricato il: {{ audio['upload_date'] }}</div>
+            <audio controls class="audio-player">
+                <source src="/{{ audio['file_path'] }}" type="audio/{{ audio['original_filename'].split('.')[-1] }}">
+                Il tuo browser non supporta l'elemento audio.
+            </audio>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="no-audio">
+        Nessun file audio caricato.
+    </div>
+    {% endif %}
+    
+    <a href="/" class="link">Torna alla pagina di caricamento</a>
+</body>
+</html>

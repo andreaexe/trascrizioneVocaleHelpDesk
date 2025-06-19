@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helpdesk - Nuova richiesta audio</title>
+    <link rel="stylesheet" href="../static/css/home.css">
+</head>
+<body>
+    <h1>Helpdesk - Carica file audio</h1>
+    
+    <div class="form-container">
+        {% if message %}
+        <div class="message {% if 'successo' in message %}success{% else %}error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+        
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="audio_file">Seleziona file audio (MP3, WAV, OGG, M4A):</label>
+                <input type="file" id="audio_file" name="audio_file" class="file-input" accept=".mp3,.wav,.ogg,.m4a" required>
+            </div>
+            <button type="submit" class="submit-btn">Carica file</button>
+        </form>
+    </div>
+    
+    <a href="/richieste" class="link">Visualizza tutte le richieste</a>
+</body>
+</html>
