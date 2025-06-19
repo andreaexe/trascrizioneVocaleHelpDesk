@@ -2,7 +2,14 @@ import os
 from flask import request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from models.audio import AudioFile
-from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
+from dotenv import load_dotenv
+
+# Carica le variabili d'ambiente dal file .env
+load_dotenv()
+
+# Ottieni le variabili d'ambiente
+UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
+ALLOWED_EXTENSIONS = os.getenv('ALLOWED_EXTENSIONS').split(',')
 
 def allowed_file(filename):
     """Controlla se il file ha un'estensione consentita"""

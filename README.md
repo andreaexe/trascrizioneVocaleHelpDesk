@@ -14,6 +14,9 @@ Sistema di gestione chiamate per help desk che permette di:
    - Windows: `.venv\Scripts\activate`
    - Linux/Mac: `source .venv/bin/activate`
 4. Installare le dipendenze: `pip install -r requirements.txt`
+5. Configurare le variabili d'ambiente:
+   - Copiare il file `.env.example` in un nuovo file chiamato `.env`
+   - Modificare i valori nel file `.env` in base alle proprie esigenze
 
 ## Esecuzione
 

@@ -1,8 +1,12 @@
 import sqlite3
-from config import DATABASE_PATH
+import os
+from dotenv import load_dotenv
+
+# Carica le variabili d'ambiente dal file .env
+load_dotenv()
 
 def init_db():
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect(os.getenv('DATABASE_PATH'))
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS audio_files (
@@ -17,6 +21,6 @@ def init_db():
     conn.close()
     
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect(os.getenv('DATABASE_PATH'))
     conn.row_factory = sqlite3.Row
     return conn
