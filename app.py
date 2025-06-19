@@ -1,10 +1,14 @@
 from flask import Flask
 from controllers.audio_controller import home, mostra_richieste
 from services.db_service import init_db
-from config import UPLOAD_FOLDER
+import os
+from dotenv import load_dotenv
+
+# Carica le variabili d'ambiente dal file .env
+load_dotenv()
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
 
 # Inizializza il database al primo avvio
 init_db()
