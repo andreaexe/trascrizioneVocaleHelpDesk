@@ -1,2 +1,32 @@
+# Framework web
 flask==2.3.3
 werkzeug==2.3.7
+Jinja2==3.1.2
+
+# Gestione database
+SQLAlchemy==2.0.23
+
+# Gestione file e uploads
+python-dotenv==1.0.0
+
+# Per processare audio (trascrizione)
+openai==1.3.5     # Per OpenAI Whisper API
+pydub==0.25.1     # Per manipolazione audio
+SpeechRecognition==3.10.0
+
+# Generazione PDF
+reportlab==4.0.4
+fpdf2==2.7.4
+PyPDF2==3.0.1
+
+# Sicurezza
+flask-wtf==1.2.1
+email-validator==2.0.0.post2
+
+# Testing
+pytest==7.4.0
+pytest-flask==1.2.0
+
+# Sviluppo
+black==23.7.0     # Formattazione del codice
+flake8==6.1.0     # Linting
