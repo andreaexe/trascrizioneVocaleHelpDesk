@@ -1,68 +1,78 @@
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-        }
-        .form-container {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .file-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .submit-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .submit-btn:hover {
-            background-color: #2980b9;
-        }
-        .message {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #3498db;
-            text-decoration: none;
-        }
-        .link:hover {
-            text-decoration: underline;
-        }
+/* Style specifico per la pagina home, si basa su common.css */
+
+/* Stili specifici per la forma di upload */
+.file-input-container:hover {
+    transform: translateY(-2px);
+}
+
+.file-input:focus + .file-input-label {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 2px rgba(244, 121, 32, 0.2);
+}
+
+/* Animazione pulse per il bottone di submit */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(244, 121, 32, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(244, 121, 32, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(244, 121, 32, 0);
+    }
+}
+
+.btn:focus {
+    animation: pulse 1.5s infinite;
+}
+
+/* Card informative */
+.info-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.info-card {
+    flex: 1;
+    min-width: 250px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    background: linear-gradient(to right, var(--primary-orange), var(--primary-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.info-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--primary-blue);
+}
+
+.info-text {
+    color: var(--neutral-gray);
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .info-card {
+        min-width: 100%;
+    }
+}

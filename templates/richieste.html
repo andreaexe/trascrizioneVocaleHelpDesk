@@ -1,31 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <title>Helpdesk - Richieste Audio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceDesk - Archivio Trascrizioni</title>
+    <link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../static/css/common.css">
     <link rel="stylesheet" href="../static/css/richieste.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Helpdesk - Richieste Audio</h1>
-    
-    {% if audio_files %}
-    <ul class="audio-list">
-        {% for audio in audio_files %}
-        <li class="audio-item">
-            <div class="audio-title">{{ audio['original_filename'] }}</div>
-            <div class="audio-date">Caricato il: {{ audio['upload_date'] }}</div>
-            <audio controls class="audio-player">
-                <source src="/{{ audio['file_path'] }}" type="audio/{{ audio['original_filename'].split('.')[-1] }}">
-                Il tuo browser non supporta l'elemento audio.
-            </audio>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <div class="no-audio">
-        Nessun file audio caricato.
+    <div class="header">
+        <img src="../static/css/logo.svg" alt="VoiceDesk Logo" class="logo">
+        <h1>Archivio Trascrizioni Audio</h1>
+        <p class="subtitle">Gestisci e rivedi le tue trascrizioni vocali</p>
     </div>
-    {% endif %}
     
-    <a href="/" class="link">Torna alla pagina di caricamento</a>
+    <div class="container">
+        <div class="controls">
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Cerca trascrizioni..." class="search-input">
+            </div>
+            <div class="filter-options">
+                <select id="filterOptions" class="filter-select">
+                    <option value="all">Tutti i file</option>
+                    <option value="mp3">MP3</option>
+                    <option value="wav">WAV</option>
+                    <option value="ogg">OGG</option>
+                    <option value="m4a">M4A</option>
+                </select>
+            </div>
+        </div>
+        
+        {% if audio_files %}
+        <ul class="audio-list">
+            {% for audio in audio_files %}
+            <li class="audio-card" data-filename="{{ audio['original_filename'] }}" data-type="{{ audio['original_filename'].split('.')[-1] }}">
+                <div class="audio-header">
+                    <div class="audio-icon">
+                        <i class="fas fa-file-audio"></i>
+                        <span class="file-type">{{ audio['original_filename'].split('.')[-1] }}</span>
+                    </div>
+                    <div class="audio-info">
+                        <h3 class="audio-title">{{ audio['original_filename'] }}</h3>
+                        <div class="audio-date"><i class="far fa-calendar-alt"></i> Caricato il: {{ audio['upload_date'] }}</div>
+                    </div>
+                </div>
+                <div class="audio-content">
+                    <audio controls class="audio-player">
+                        <source src="/{{ audio['file_path'] }}" type="audio/{{ audio['original_filename'].split('.')[-1] }}">
+                        Il tuo browser non supporta l'elemento audio.
+                    </audio>
+                </div>
+                <div class="audio-actions">
+                    <button class="action-btn view-btn"><i class="fas fa-eye"></i> Visualizza</button>
+                    <button class="action-btn download-btn"><i class="fas fa-download"></i> Scarica</button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="no-audio">
+            <i class="fas fa-folder-open no-data-icon"></i>
+            <p>Nessun file audio caricato.</p>
+            <p class="no-data-hint">Carica un file audio dalla pagina principale per visualizzarlo qui.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="navigation-buttons">
+        <a href="/" class="btn"><i class="fas fa-plus"></i> Carica nuovo file</a>
+    </div>
+    
+    <footer class="footer">
+        <img src="../static/css/logo.svg" alt="VoiceDesk Logo" style="width: 120px;">
+        <p>&copy; 2025 WeTech's - Tutti i diritti riservati</p>
+    </footer>
+    
+    <script>
+        // Script per la ricerca e il filtraggio
+        document.getElementById('searchInput').addEventListener('keyup', filterItems);
+        document.getElementById('filterOptions').addEventListener('change', filterItems);
+        
+        function filterItems() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filterType = document.getElementById('filterOptions').value;
+            
+            document.querySelectorAll('.audio-card').forEach(item => {
+                const fileName = item.dataset.filename.toLowerCase();
+                const fileType = item.dataset.type.toLowerCase();
+                
+                const matchesSearch = fileName.includes(searchTerm);
+                const matchesFilter = filterType === 'all' || fileType === filterType;
+                
+                if (matchesSearch && matchesFilter) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>

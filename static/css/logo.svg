@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200" height="60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f47920;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#af6344;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#185493;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Audio waves -->
+  <path d="M20,30 Q25,20 30,30 Q35,40 40,30" stroke="url(#gradient)" stroke-width="3" fill="none" />
+  <path d="M50,30 Q55,15 60,30 Q65,45 70,30" stroke="url(#gradient)" stroke-width="3" fill="none" />
+  <path d="M80,30 Q85,10 90,30 Q95,50 100,30" stroke="url(#gradient)" stroke-width="3" fill="none" />
+  
+  <!-- Text -->
+  <text x="120" y="30" font-family="Arial" font-size="16" font-weight="bold" fill="#185493">VoiceDesk</text>
+  <text x="120" y="45" font-family="Arial" font-size="10" fill="#7c7c7c">by WeTech's</text>
+</svg>

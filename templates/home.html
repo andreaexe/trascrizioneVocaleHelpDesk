@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <title>Helpdesk - Nuova richiesta audio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceDesk - Trascrizione Audio</title>
+    <link rel="icon" href="../static/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../static/css/common.css">
     <link rel="stylesheet" href="../static/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>Helpdesk - Carica file audio</h1>
+    <div class="header">
+        <img src="../static/css/logo.svg" alt="VoiceDesk Logo" class="logo">
+        <h1>Trascrizione Vocale Helpdesk</h1>
+        <p class="subtitle">Carica il tuo file audio per la trascrizione automatica</p>
+    </div>
     
-    <div class="form-container">
+    <div class="container">
         {% if message %}
         <div class="message {% if 'successo' in message %}success{% else %}error{% endif %}">
             {{ message }}
@@ -17,12 +26,39 @@
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="audio_file">Seleziona file audio (MP3, WAV, OGG, M4A):</label>
-                <input type="file" id="audio_file" name="audio_file" class="file-input" accept=".mp3,.wav,.ogg,.m4a" required>
+                <div class="file-input-container">
+                    <input type="file" id="audio_file" name="audio_file" class="file-input" accept=".mp3,.wav,.ogg,.m4a" required>
+                    <label for="audio_file" class="file-input-label">
+                        Trascina qui il tuo file audio o clicca per selezionarlo
+                        <div class="file-name">Nessun file selezionato</div>
+                    </label>
+                </div>
             </div>
-            <button type="submit" class="submit-btn">Carica file</button>
+            <button type="submit" class="btn">Carica e Trascrivi</button>
         </form>
     </div>
     
-    <a href="/richieste" class="link">Visualizza tutte le richieste</a>
+    <div class="container" style="background-color: #f8f9fa;">
+        <h2 style="color: var(--primary-blue); margin-bottom: 15px;">Come funziona</h2>
+        <ol style="padding-left: 20px; margin-bottom: 20px;">
+            <li>Carica il tuo file audio (formati supportati: MP3, WAV, OGG, M4A)</li>
+            <li>Il sistema elaborerà il file utilizzando la tecnologia di riconoscimento vocale</li>
+            <li>Ricevi la trascrizione testuale del tuo file audio</li>
+        </ol>
+        <a href="/richieste" class="btn btn-blue">Visualizza richieste precedenti</a>
+    </div>
+    
+    <footer class="footer">
+        <img src="../static/css/logo.svg" alt="VoiceDesk Logo" style="width: 120px;">
+        <p>&copy; 2025 WeTech's - Tutti i diritti riservati</p>
+    </footer>
+    
+    <script>
+        // Script per mostrare il nome del file selezionato
+        document.getElementById('audio_file').addEventListener('change', function() {
+            var fileName = this.files[0] ? this.files[0].name : 'Nessun file selezionato';
+            document.querySelector('.file-name').textContent = fileName;
+        });
+    </script>
 </body>
 </html>
