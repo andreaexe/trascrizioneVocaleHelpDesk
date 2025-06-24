@@ -8,8 +8,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Ottieni le variabili d'ambiente
-UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER')
-ALLOWED_EXTENSIONS = os.getenv('ALLOWED_EXTENSIONS').split(',')
+UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', 'static/audio')
+# Gestione più robusta per ALLOWED_EXTENSIONS
+allowed_ext = os.getenv('ALLOWED_EXTENSIONS')
+ALLOWED_EXTENSIONS = allowed_ext.split(',') if allowed_ext else ['mp3', 'wav', 'ogg', 'm4a']
 
 def allowed_file(filename):
     """Controlla se il file ha un'estensione consentita"""
