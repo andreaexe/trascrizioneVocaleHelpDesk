@@ -3,7 +3,7 @@
 Sistema di gestione chiamate per help desk che permette di:
 - Caricare file audio di richieste
 - Visualizzare l'elenco delle richieste audio
-- (Future) Trascrizione automatica delle richieste vocali
+- Trascrizione automatica delle richieste vocali tramite OpenAI Whisper API
 - (Future) Generazione PDF organizzati delle richieste
 
 ## Installazione
@@ -17,6 +17,7 @@ Sistema di gestione chiamate per help desk che permette di:
 5. Configurare le variabili d'ambiente:
    - Copiare il file `.env.example` in un nuovo file chiamato `.env`
    - Modificare i valori nel file `.env` in base alle proprie esigenze
+   - Importante: Assicurarsi di impostare una API key di OpenAI valida nel file `.env` (OPENAI_API_KEY)
 
 ## Esecuzione
 

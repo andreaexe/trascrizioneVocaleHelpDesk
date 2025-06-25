@@ -17,6 +17,19 @@ def init_db():
             upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    
+    # Tabella per memorizzare le trascrizioni
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS transcriptions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id INTEGER NOT NULL,
+            transcript TEXT NOT NULL,
+            segments TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (file_id) REFERENCES audio_files (id)
+        )
+    ''')
+    
     conn.commit()
     conn.close()
     

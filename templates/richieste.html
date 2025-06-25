@@ -56,6 +56,15 @@
                 <div class="audio-actions">
                     <button class="action-btn view-btn"><i class="fas fa-eye"></i> Visualizza</button>
                     <button class="action-btn download-btn"><i class="fas fa-download"></i> Scarica</button>
+                    {% if audio['has_transcription'] %}
+                        <button class="action-btn transcription-btn" data-transcript="{{ audio['transcript'] }}">
+                            <i class="fas fa-file-alt"></i> Trascrizione
+                        </button>
+                    {% else %}
+                        <button class="action-btn transcribe-btn" data-id="{{ audio['id'] }}">
+                            <i class="fas fa-language"></i> Trascrivi
+                        </button>
+                    {% endif %}
                 </div>
             </li>
             {% endfor %}
@@ -79,10 +88,54 @@
     </footer>
     
     <script>
-        // Script per la ricerca e il filtraggio
-        document.getElementById('searchInput').addEventListener('keyup', filterItems);
-        document.getElementById('filterOptions').addEventListener('change', filterItems);
+        // Esegui quando il DOM è completamente caricato
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestisci la ricerca e il filtraggio
+            const searchInput = document.getElementById('searchInput');
+            const filterOptions = document.getElementById('filterOptions');
+            
+            if (searchInput) searchInput.addEventListener('keyup', filterItems);
+            if (filterOptions) filterOptions.addEventListener('change', filterItems);
+            
+            // Gestisci i pulsanti "Visualizza"
+            document.querySelectorAll('.view-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const audioPlayer = this.closest('.audio-card').querySelector('audio');
+                    if (audioPlayer) {
+                        audioPlayer.scrollIntoView({ behavior: 'smooth' });
+                        audioPlayer.play();
+                    }
+                });
+            });
+            
+            // Gestisci i pulsanti "Scarica"
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const audioSrc = this.closest('.audio-card').querySelector('audio source').src;
+                    const filename = this.closest('.audio-card').dataset.filename;
+                    
+                    // Crea un link temporaneo per scaricare il file
+                    const a = document.createElement('a');
+                    a.href = audioSrc;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+            });
+            
+            // Gestisci i pulsanti "Trascrizione"
+            document.querySelectorAll('.transcription-btn').forEach(button => {
+                button.addEventListener('click', showTranscriptionModal);
+            });
+            
+            // Gestisci i pulsanti "Trascrivi"
+            document.querySelectorAll('.transcribe-btn').forEach(button => {
+                button.addEventListener('click', requestTranscription);
+            });
+        });
         
+        // Filtra gli elementi in base alla ricerca e al tipo di file
         function filterItems() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const filterType = document.getElementById('filterOptions').value;
@@ -100,6 +153,131 @@
                     item.style.display = 'none';
                 }
             });
+        }
+        
+        // Mostra la modale con la trascrizione
+        function showTranscriptionModal() {
+            const transcript = this.dataset.transcript;
+            console.log("Visualizzazione trascrizione:", transcript); // Debug
+            
+            // Crea una modale per mostrare la trascrizione
+            const modal = document.createElement('div');
+            modal.className = 'transcript-modal';
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Trascrizione Audio</h3>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>${transcript}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="copy-btn"><i class="fas fa-copy"></i> Copia testo</button>
+                        <button class="close-btn">Chiudi</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Gestisci la chiusura della modale
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            modal.querySelector('.close-btn').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            // Gestisci copia testo
+            modal.querySelector('.copy-btn').addEventListener('click', () => {
+                navigator.clipboard.writeText(transcript).then(() => {
+                    const copyBtn = modal.querySelector('.copy-btn');
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiato!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copia testo';
+                    }, 2000);
+                });
+            });
+            
+            // Chiudi la modale cliccando all'esterno
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+        }
+        
+        // Richiedi una nuova trascrizione
+        async function requestTranscription() {
+            const fileId = this.dataset.id;
+            const button = this;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> In corso...';
+            button.disabled = true;
+            
+            try {
+                // Mostra indicatore di caricamento nella card
+                const audioCard = button.closest('.audio-card');
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'loading-overlay';
+                loadingOverlay.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <p>Trascrizione in corso...</p>
+                `;
+                audioCard.appendChild(loadingOverlay);
+                
+                const response = await fetch(`/transcribe/${fileId}`, {
+                    method: 'POST'
+                });
+                
+                // Rimuovi l'indicatore di caricamento
+                audioCard.removeChild(loadingOverlay);
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Trasforma il pulsante da "Trascrivi" a "Trascrizione"
+                    button.innerHTML = '<i class="fas fa-file-alt"></i> Trascrizione';
+                    button.classList.remove('transcribe-btn');
+                    button.classList.add('transcription-btn');
+                    button.dataset.transcript = data.transcript;
+                    button.disabled = false;
+                    
+                    // Rimuovi l'event listener precedente e aggiungi quello per mostrare la trascrizione
+                    button.removeEventListener('click', requestTranscription);
+                    button.addEventListener('click', showTranscriptionModal);
+                    
+                    // Mostra la trascrizione immediatamente
+                    showTranscriptionModal.call(button);
+                    
+                    // Mostra notifica di successo
+                    const notification = document.createElement('div');
+                    notification.className = 'success-notification';
+                    notification.innerHTML = '<i class="fas fa-check-circle"></i> Trascrizione completata con successo!';
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.classList.add('show');
+                    }, 10);
+                    
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => {
+                            document.body.removeChild(notification);
+                        }, 300);
+                    }, 3000);
+                } else {
+                    alert("Errore: " + data.error);
+                    button.innerHTML = '<i class="fas fa-language"></i> Trascrivi';
+                    button.disabled = false;
+                }
+            } catch (error) {
+                alert("Errore nella richiesta: " + error);
+                button.innerHTML = '<i class="fas fa-language"></i> Trascrivi';
+                button.disabled = false;
+            }
         }
     </script>
 </body>
